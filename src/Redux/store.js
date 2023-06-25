@@ -1,27 +1,10 @@
-import { createStore, combineReducers } from 'redux';
+import { configureStore } from "@reduxjs/toolkit";
+import AuthReducer from "./Reducer/AuthReducer";
 
-// Reducer untuk manajemen status login
-const initialState = {
-  isLogin: false
-};
-
-const authReducer = (state = initialState, action) => {
-  switch (action.type) {
-    case 'LOGIN':
-      return { isLogin: true };
-    case 'LOGOUT':
-      return { isLogin: false };
-    default:
-      return state;
-  }
-};
-
-// Menggabungkan reducer menjadi satu root reducer
-const rootReducer = combineReducers({
-  auth: authReducer
+export const store = configureStore({
+  reducer: {
+    auth: AuthReducer,
+  },
 });
-
-// Membuat Redux store
-const store = createStore(rootReducer);
 
 export default store;

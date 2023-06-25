@@ -7,26 +7,24 @@ import ModalWrite from './ModalWrite';
 import ModalSignUp from './ModalSignUp';
 import { useNavigate } from 'react-router-dom';
 import Profile from './Profile';
-
-
+import { useDispatch } from 'react-redux';
+import { logoutSuccess } from '../../Redux/Reducer/AuthReducer';
 
 const Navbar = () => {
-  const navigate = useNavigate()
+  
   const [isOpen, setIsOpen] = useState(false);
   const [isWriteModalOpen, setIsWriteModalOpen] = useState(false);
   const [isSignupModalOpen, setIsSignupModalOpen] = useState(false);
 
   // Ketika User Log in >> Set True dan User Log out >> Set False Notioan
-  const [isLogin, setIsLogin] = useState(false);
-
-
-
-
+  const isLogin = localStorage.getItem('token');
+  
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleWriteClick = () => {
-
     setIsWriteModalOpen(true);
-  }
+  };
 
   const handleSignupClick = () => {
     setIsSignupModalOpen(true);
@@ -36,6 +34,13 @@ const Navbar = () => {
     setIsOpen(false);
     setIsWriteModalOpen(false);
   };
+  
+  const handleLogout = () => {
+    dispatch(logoutSuccess(localStorage.token));
+    navigate('/');
+    // Add additional logic for clearing any user data or state
+  };
+
   return (
     <Box>
       <Box
@@ -82,28 +87,44 @@ const Navbar = () => {
             Write
           </Link>
 
-          <Link href="/signtest" px={22} display={{ base: "none", md: "inline-block" }}>
-            Sign In
-            {/* <SignTest/> */}
-          </Link>
-
-            {isLogin ? <Profile/> :
-            <Button
-            ml={6}
-            mr={10}
-            borderRadius={15}
-            color="white"
-            bg="black"
-            padding={5}
-            _hover={{ bg: "black" }}
-            _active={{ bg: "#93D9EA" }}
-            onClick={handleSignupClick}>
-              Get Started
-            </Button>
-          
-            }
-            
-          
+          {isLogin ? (
+            <Flex>
+              <Button
+                mt={1}
+                ml={6}
+                mr={6}
+                borderRadius={15}
+                color="white"
+                bg="black"
+                padding={3}
+                _hover={{ bg: "black" }}
+                _active={{ bg: "#93D9EA" }}
+                onClick={() => handleLogout()}
+              >
+                Log Out
+              </Button>
+                <Profile />
+            </Flex>
+          ) : (
+            <Flex>
+              <Link href="/signtest" px={22} mt={2} display={{ base: "none", md: "inline-block" }}>
+                Sign In
+              </Link>
+              <Button
+                ml={6}
+                mr={10}
+                borderRadius={15}
+                color="white"
+                bg="black"
+                padding={5}
+                _hover={{ bg: "black" }}
+                _active={{ bg: "#93D9EA" }}
+                onClick={handleSignupClick}
+              >
+                Get Started
+              </Button>
+            </Flex>
+          )}
         </Flex>
       </Box>
 
@@ -133,16 +154,17 @@ const Navbar = () => {
 
       {/* Sign Up Modal */}
       <Modal isOpen={isSignupModalOpen} onClose={handleCloseModal}>
-  <ModalContent>
-    <ModalHeader>Sign Up</ModalHeader>
-    <ModalCloseButton />
-    <ModalBody>
-  {isSignupModalOpen && (
-    <ModalSignUp isOpen={isSignupModalOpen} onClose={() => setIsSignupModalOpen(false)} />
-  )}
-    </ModalBody>
-</ModalContent>
-</Modal>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Sign Up</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            {isSignupModalOpen && (
+              <ModalSignUp isOpen={isSignupModalOpen} onClose={() => setIsSignupModalOpen(false)} />
+            )}
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 };

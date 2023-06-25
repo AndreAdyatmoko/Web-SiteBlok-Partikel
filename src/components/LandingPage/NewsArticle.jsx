@@ -25,6 +25,8 @@ const NewsArticle = () => {
   }, []);
 
   const handleNextPage = () => {
+    const totalPages = Math.ceil(articles.length / 3);
+    if (activePage < totalPages && activePage < 3)
     setActivePage((prevPage) => prevPage + 1);
   };
 
@@ -72,7 +74,7 @@ const NewsArticle = () => {
                 height="100%"
               >
                 <Image
-                  src={article.imageURL}
+                  src={`https://minpro-blog.purwadhikabootcamp.com/${article.imageURL}`}
                   alt={article.id}
                   style={{ width: "100%", height: "200px", objectFit: "cover" }}
                 />
@@ -80,7 +82,6 @@ const NewsArticle = () => {
                   <Heading as="h3" fontSize="xl" my={2}>
                     {article.title}
                   </Heading>
-                  {/* <Text>{article.content}</Text> */}
                   <Text mt={2}>
                     Created At: {new Date(article.createdAt).toLocaleDateString()}
                   </Text>

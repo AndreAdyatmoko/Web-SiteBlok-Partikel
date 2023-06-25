@@ -4,7 +4,7 @@ import { Avatar, Wrap, WrapItem } from '@chakra-ui/react';
 
 const Profile = () => {
   return (
-    <Wrap zIndex={1000}>
+    <Wrap mr={5}>
       <WrapItem>
         <Link to="/profilemenu">
         <Avatar name='User' src='' />
