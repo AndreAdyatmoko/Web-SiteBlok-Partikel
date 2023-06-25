@@ -8,9 +8,7 @@ import Navbar from './components/LandingPage/Navbar';
 import ProfileMenu from './components/LandingPage/ProfileMenu';
 import ProfileUpdate from './components/LandingPage/ProfileUpdate';
 import VerificationPage from './components/LandingPage/VerificationPage';
-import { createStore, combineReducers } from 'redux';
 import { Provider } from 'react-redux';
-import {AuthReducer} from './Redux/Reducer/AuthReducer';
 import SignTest from './components/LandingPage/SignTest';
 import ForgotPassword from './components/LandingPage/ForgotPassword';
 
@@ -37,6 +35,7 @@ const App = () => {
           <Route path='/signtest' element={<SignTest/>} />
           <Route path='/forgotpassword' element={<ForgotPassword/>} />
         </Routes>
+
       </ChakraProvider>
     </Provider>
   );
