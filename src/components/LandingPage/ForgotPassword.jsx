@@ -10,10 +10,13 @@ import {
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const ForgotPassword = ({ isOpen, onClose }) => {
   const [resetSuccess, setResetSuccess] = useState(false); // State untuk menampilkan pesan sukses
   const [isRequesting, setIsRequesting] = useState(false); // State untuk menandakan sedang melakukan permintaan
+
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -28,7 +31,7 @@ const ForgotPassword = ({ isOpen, onClose }) => {
       // Request ke API ke endpoint reset password
       await axios.put('https://minpro-blog.purwadhikabootcamp.com/api/auth/forgotPass', {
         email: values.email,
-        FE_URL: "http://localhost:3000/"
+        FE_URL: "http://localhost:3000"
       });
 
       // Jika permintaan sukses berhasil

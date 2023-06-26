@@ -37,7 +37,7 @@ const SignIn = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const onForgot = () => {
-    onOpen();
+    navigate("/forgotpassword");
   };
 
   const navigate = useNavigate();
@@ -65,6 +65,7 @@ const SignIn = () => {
       }
     } catch (err) {
       console.log(err);
+      alert("Invalid email or password");
     }
   };
 
@@ -108,8 +109,7 @@ const SignIn = () => {
                 fontStyle={"italic"}
                 align={"center"}
               >
-                You can login by <br />Username <br />Email <br />Phone Number
-                <br />😉😉
+                You can login by Email 😉😉
               </Text>
             </Box>
             <Box w={"full"}>
@@ -203,7 +203,7 @@ const SignIn = () => {
               </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme="blue" mr={3} type="submit">
+              <Button colorScheme="teal" mr={3} type="submit">
                 Sign In
               </Button>
               <Button variant="ghost" onClick={onClose}>

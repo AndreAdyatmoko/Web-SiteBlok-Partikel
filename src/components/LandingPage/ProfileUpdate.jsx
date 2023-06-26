@@ -1,60 +1,112 @@
-import React from 'react';
-import { Box, Heading, FormControl, FormLabel, Input, Button } from '@chakra-ui/react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
+import React, { useEffect, useState } from 'react';
+import { Box, Flex, Avatar, Text, Button, Heading, Grid, Input } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
-const validationSchema = Yup.object({
-  username: Yup.string().required('Username is required'),
-  email: Yup.string().email('Invalid email').required('Email is required'),
-  phoneNumber: Yup.string().required('Phone number is required'),
-});
+const ProfilePage = ({ user }) => {
+  const navigate = useNavigate();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
 
-const ProfileUpdate = () => {
-  const handleFormSubmit = (values) => {
-    // Lakukan tindakan yang sesuai dengan data pengguna yang telah diubah
-    console.log(values);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const res = await axios.get(
+          'https://minpro-blog.purwadhikabootcamp.com/api/auth', {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log(res);
+
+        const { username: fetchedUsername, email: fetchedEmail, phone: fetchedPhone } = res.data; // Mengambil data pengguna dari API
+
+        setUsername(fetchedUsername);
+        setEmail(fetchedEmail);
+        setPhone(fetchedPhone);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  const handleEmailUpdate = () => {
+    // Handle email update here
+    navigate("/changeemail");
+  };
+
+  const handlePhoneUpdate = () => {
+    // Handle phone number update here
+    navigate("/changephonenumber");
+  };
+
+  const handleUsernameUpdate = () => {
+    // Handle username update here
+    navigate("/changeusername");
+  };
+
+  const handleBackToHome = () => {
+    // Handle navigation back to home
+    navigate("/");
   };
 
   return (
-    <Box maxWidth="400px" mx="auto" mt={8} p={4} borderWidth={1} borderRadius="md" boxShadow="md">
-      <Heading mb={4} textAlign="center">
-        Update Profile
-      </Heading>
-      <Formik
-        initialValues={{
-          username: '',
-          email: '',
-          phoneNumber: '',
-        }}
-        validationSchema={validationSchema}
-        onSubmit={handleFormSubmit}
-      >
-        <Form>
-          <FormControl>
-            <FormLabel>Username</FormLabel>
-            <Field type="text" name="username" as={Input} />
-            <ErrorMessage name="username" component="div" color="red.500" />
-          </FormControl>
-
-          <FormControl mt={4}>
-            <FormLabel>Email</FormLabel>
-            <Field type="email" name="email" as={Input} />
-            <ErrorMessage name="email" component="div" color="red.500" />
-          </FormControl>
-
-          <FormControl mt={4}>
-            <FormLabel>Phone Number</FormLabel>
-            <Field type="text" name="phoneNumber" as={Input} />
-            <ErrorMessage name="phoneNumber" component="div" color="red.500" />
-          </FormControl>
-
-          <Button mt={6} colorScheme="blue" type="submit" isFullWidth>
-            Update
+    <Box p={4} mt={20}>
+      <Box bg="white" boxShadow="md" p={4} borderRadius="md" mb={4}>
+        <Flex justify="space-between" align="center">
+          <Text fontSize="lg" fontWeight="bold">
+            User Name
+          </Text>
+          <Button colorScheme="teal" size="sm" onClick={handleUsernameUpdate}>
+            Change
           </Button>
-        </Form>
-      </Formik>
+        </Flex>
+        <Text fontSize="md">{username}</Text>
+      </Box>
+
+      <Box bg="white" boxShadow="md" p={4} borderRadius="md" mb={4}>
+        <Flex justify="space-between" align="center">
+          <Text fontSize="lg" fontWeight="bold">
+            Email
+          </Text>
+          <Button colorScheme="teal" size="sm" onClick={handleEmailUpdate}>
+            Change
+          </Button>
+        </Flex>
+        <Text fontSize="md">
+          {email.replace(/.(?=.*@)/g, '*')}
+        </Text>
+      </Box>
+
+      <Box bg="white" boxShadow="md" p={4} borderRadius="md" mb={4}>
+        <Flex justify="space-between" align="center">
+          <Text fontSize="lg" fontWeight="bold">
+            Phone Number
+          </Text>
+          <Button colorScheme="teal" size="sm" onClick={handlePhoneUpdate}>
+            Change
+          </Button>
+        </Flex>
+        <Text fontSize="md">
+          {phone.replace(/\d(?=\d{4})/g, '*')}
+        </Text>
+      </Box>
+
+      <Flex justify="center">
+        <Button
+          colorScheme="teal"
+          size="md"
+          onClick={handleBackToHome}
+        >
+          Back to Home
+        </Button>
+      </Flex>
     </Box>
   );
 };
 
-export default ProfileUpdate;
+export default ProfilePage;
