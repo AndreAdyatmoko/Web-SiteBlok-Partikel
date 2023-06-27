@@ -1,56 +1,93 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Flex, Avatar, Text, Button, Heading, Grid, Input } from '@chakra-ui/react';
+import { Box, Flex, Text, Button, Grid, Input, useToast } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-
 const ProfilePage = () => {
+  const toast = useToast();
   const navigate = useNavigate();
-  const [userData, setUserData] = useState({ username: "", avatar: "" });
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [userData, setUserData] = useState({ username: '', imgProfile: '' });
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
-        const res = await axios.get(
-          'https://minpro-blog.purwadhikabootcamp.com/api/auth',
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        console.log(res);
+        const res = await axios.get('https://minpro-blog.purwadhikabootcamp.com/api/auth', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-        const { username, avatar } = res.data; // Mengambil username dan URL avatar dari API
-
-        setUserData({ username, avatar });
+        const { username, imgProfile } = res.data;
+        setUserData({ username, imgProfile });
       } catch (error) {
         console.log(error);
       }
     };
+
     fetchUserData();
   }, []);
 
-  const handleProfileUpdate = () => {
-    // Handle profile update here
+  const handleProfileUpdate = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const formData = new FormData();
+      formData.append('file', selectedFile);
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+
+      const response = await axios.post(
+        'https://minpro-blog.purwadhikabootcamp.com/api/profile/single-uploaded',
+        formData,
+        config
+      );
+      console.log(response.data);
+
+      toast({
+        title: 'Profile updated successfully!',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+      });
+
+      // Handle response
+    } catch (error) {
+      toast({
+        title: 'Something went wrong!',
+        status: 'error',
+        description: error.response.data.err,
+        duration: 2000,
+        isClosable: true,
+      });
+      console.log(error);
+      // Error Handle
+    }
   };
 
   const handleResetPassword = () => {
-    // Handle reset password here
-    navigate("/changepassword");
+    navigate('/changepassword');
   };
 
   const handleAvatarUpload = (event) => {
-    // Handle avatar upload here
     const file = event.target.files[0];
-    // ... tambahkan logika untuk mengunggah file avatar ke server atau penyimpanan yang Anda gunakan
+    setSelectedFile(file);
   };
 
   return (
     <Box p={4} mt={20}>
       <Flex align="center" mb={4}>
-        <Avatar size="xl" name={userData.username} src={userData.avatar} />
+        {userData.imgProfile && (
+          <img
+            src={`https://minpro-blog.purwadhikabootcamp.com/${userData.imgProfile}`}
+            alt={userData.username}
+            style={{ width: '200px', height: '200px', borderRadius: '50%' }}
+          />
+        )}
         <Text ml={4} fontSize="2xl" fontWeight="bold">
           {userData.username}
         </Text>
@@ -60,7 +97,7 @@ const ProfilePage = () => {
         <Text fontSize="lg">Upload Photo</Text>
         <Flex mt={2}>
           <Input type="file" onChange={handleAvatarUpload} />
-          <Button ml={2} colorScheme="teal" size="sm">
+          <Button ml={2} colorScheme="teal" size="sm" onClick={handleProfileUpdate}>
             Upload
           </Button>
         </Flex>
@@ -72,7 +109,7 @@ const ProfilePage = () => {
             colorScheme="teal"
             size="md"
             width="100%"
-            onClick={() => navigate("/profileupdate")}
+            onClick={() => navigate('/profileupdate')}
           >
             Edit Profile
           </Button>

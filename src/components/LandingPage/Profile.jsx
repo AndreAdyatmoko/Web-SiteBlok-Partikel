@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Avatar, Box } from '@chakra-ui/react';
+import { Box } from '@chakra-ui/react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const Profile = () => {
-  const [userData, setUserData] = useState({ username: '', avatar: '' });
+  const [userData, setUserData] = useState({ username: '', imgProfile: '' });
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
 
@@ -20,11 +20,10 @@ const Profile = () => {
             },
           }
         );
-        console.log(res);
 
-        const { username, avatar } = res.data; // Mengambil username dan URL avatar dari API
+        const { username, imgProfile } = res.data;
 
-        setUserData({ username, avatar });
+        setUserData({ username, imgProfile });
       } catch (error) {
         console.log(error);
       }
@@ -44,22 +43,25 @@ const Profile = () => {
     setIsHovered(false);
   };
 
-  const avatarStyle = {
+  const imgStyle = {
     cursor: 'pointer',
     filter: isHovered ? 'brightness(85%)' : 'brightness(100%)',
     transition: 'filter 0.3s',
+    width: '50px',
+    height: '50px',
+    objectFit: 'cover',
+    borderRadius: '50%',
   };
 
   return (
     <Box mr={5}>
-      <Avatar
-        size="md"
-        name={userData.username}
-        src={userData.avatar}
+      <img
+        src={`https://minpro-blog.purwadhikabootcamp.com/${userData.imgProfile}`}
+        alt={userData.username}
         onClick={handleClick}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        style={avatarStyle}
+        style={imgStyle}
       />
     </Box>
   );
