@@ -49,9 +49,9 @@ const ProfilePage = () => {
       console.log(response.data);
 
       toast({
-        title: 'Profile updated successfully!',
+        title: 'Profile updated successfully! Please Refres the Browser',
         status: 'success',
-        duration: 2000,
+        duration: 9git000,
         isClosable: true,
       });
 
@@ -60,7 +60,6 @@ const ProfilePage = () => {
       toast({
         title: 'Something went wrong!',
         status: 'error',
-        description: error.response.data.err,
         duration: 2000,
         isClosable: true,
       });
