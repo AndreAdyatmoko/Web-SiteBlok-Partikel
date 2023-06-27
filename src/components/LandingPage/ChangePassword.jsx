@@ -90,7 +90,7 @@ const ChangePassword = () => {
 
   if (!isPasswordChanged) {
     return (
-      <Box marginBottom={"250px"} px={6} py={4}>
+      <Box marginBottom={"250px"} px={6} py={4} mt="100px">
         <Heading fontFamily={"monospace"} as="h1" size="xl" mb={4}>
           Change Password
         </Heading>

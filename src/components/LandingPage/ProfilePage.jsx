@@ -3,17 +3,18 @@ import { Box, Flex, Avatar, Text, Button, Heading, Grid, Input } from '@chakra-u
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-const ProfilePage = ({ user }) => {
+
+const ProfilePage = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
+  const [userData, setUserData] = useState({ username: "", avatar: "" });
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
         const token = localStorage.getItem('token');
         const res = await axios.get(
-          'https://minpro-blog.purwadhikabootcamp.com/api/auth', {
+          'https://minpro-blog.purwadhikabootcamp.com/api/auth',
+          {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -21,10 +22,9 @@ const ProfilePage = ({ user }) => {
         );
         console.log(res);
 
-        const { username: fetchedUsername, avatar: fetchedAvatar } = res.data; // Mengambil username dan URL avatar dari API
+        const { username, avatar } = res.data; // Mengambil username dan URL avatar dari API
 
-        setUsername(fetchedUsername);
-        setAvatarUrl(fetchedAvatar);
+        setUserData({ username, avatar });
       } catch (error) {
         console.log(error);
       }
@@ -50,23 +50,20 @@ const ProfilePage = ({ user }) => {
   return (
     <Box p={4} mt={20}>
       <Flex align="center" mb={4}>
-        <Avatar size="xl" name={user?.name} src={avatarUrl} />
+        <Avatar size="xl" name={userData.username} src={userData.avatar} />
         <Text ml={4} fontSize="2xl" fontWeight="bold">
-          {username}
+          {userData.username}
         </Text>
       </Flex>
 
       <Box mt={4}>
-        <Text fontSize="lg">Avatar Upload</Text>
+        <Text fontSize="lg">Upload Photo</Text>
         <Flex mt={2}>
           <Input type="file" onChange={handleAvatarUpload} />
           <Button ml={2} colorScheme="teal" size="sm">
             Upload
           </Button>
         </Flex>
-        <Text fontSize="sm" mt={2} color="gray.500">
-          Upload a new avatar image.
-        </Text>
       </Box>
 
       <Grid templateColumns="repeat(2, 1fr)" gap={4} mb={4}>

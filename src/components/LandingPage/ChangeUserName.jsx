@@ -1,9 +1,19 @@
-import { Box, Button, Input, Text, useToast } from "@chakra-ui/react";
+import { useState } from "react";
+import {
+  Box,
+  Button,
+  Input,
+  Text,
+} from "@chakra-ui/react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from "axios";
+import { useToast } from "@chakra-ui/react";
 
 const ChangeUsernamePage = () => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const toast = useToast();
+
   // Define the validation schema using Yup
   const validationSchema = Yup.object().shape({
     currentUsername: Yup.string().required("Current Username is required"),
@@ -11,16 +21,16 @@ const ChangeUsernamePage = () => {
   });
 
   // Handle form submission
-  const toast = useToast();
-  const handleSubmit = async (values, { setSubmitting }) => {
+  const handleSubmit = async (values) => {
     try {
+      setIsSubmitting(true);
       const token = localStorage.getItem("token");
 
       // Send the PATCH request to the endpoint with the Authorization header
       await axios.patch(
         "https://minpro-blog.purwadhikabootcamp.com/api/auth/changeUsername",
         {
-          currentUsername: values.username,
+          currentUsername: values.currentUsername,
           newUsername: values.newUsername,
           FE_URL: "http://localhost:3000",
         },
@@ -34,18 +44,20 @@ const ChangeUsernamePage = () => {
       // Handle success response
       console.log("Username changed successfully");
       toast({
-        title: "Username changed successfully",
+        title: "Check your email for verification",
         description: "Check your email for verification",
         status: "success",
         duration: 4000,
         isClosable: true,
       });
-      // Show a success message or redirect to another page
+
+
     } catch (error) {
       // Handle error response
       console.error("Error changing username:", error);
       toast({
         title: "Error changing username",
+        description: error.response.data,
         status: "error",
         duration: 4000,
         isClosable: true,
@@ -53,63 +65,51 @@ const ChangeUsernamePage = () => {
       // Show an error message to the user
     }
 
-    setSubmitting(false);
+    setIsSubmitting(false);
   };
 
   return (
-    <Box p={4} mt={20}>
+    <Box mt="100px">
+
       <Formik
         initialValues={{ currentUsername: "", newUsername: "" }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {() => (
           <Form>
-            <Box mb={4}>
-              <Text fontSize="lg" fontWeight="bold" fontFamily="Arial">
-                Current User Name
-              </Text>
-              <Box bg="white" boxShadow="md" p={4} borderRadius="md">
-                <Field
-                  as={Input}
-                  type="text"
-                  name="currentUsername"
-                  placeholder="Enter your current username"
-                />
-              </Box>
+            <div>
+              <label>Current Username</label>
+              <Field
+                as={Input}
+                type="text"
+                name="currentUsername"
+                required
+              />
               <ErrorMessage
                 name="currentUsername"
                 component={Text}
                 color="red.500"
-                mt={2}
-                fontFamily="Arial"
               />
-            </Box>
-            <Box mb={4}>
-              <Text fontSize="lg" fontWeight="bold" fontFamily="Arial">
-                New User Name
-              </Text>
-              <Box bg="white" boxShadow="md" p={4} borderRadius="md">
-                <Field
-                  as={Input}
-                  type="text"
-                  name="newUsername"
-                  placeholder="Enter your new username"
-
-                />
-              </Box>
+            </div>
+            <div>
+              <label>New Username</label>
+              <Field
+                as={Input}
+                type="text"
+                name="newUsername"
+                required
+              />
               <ErrorMessage
                 name="newUsername"
                 component={Text}
                 color="red.500"
-                mt={2}
               />
-            </Box>
+            </div>
             <Button
-              colorScheme="teal"
-              size="md"
-              isLoading={isSubmitting}
               type="submit"
+              isLoading={isSubmitting}
+              loadingText="Submitting"
             >
               Change Username
             </Button>

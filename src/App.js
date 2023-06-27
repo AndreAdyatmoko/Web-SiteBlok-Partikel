@@ -5,7 +5,7 @@ import Landing from './pages/Landing';
 import Profile from './components/LandingPage/Profile';
 import AboutUs from './components/LandingPage/AboutUs';
 import Navbar from './components/LandingPage/Navbar';
-import ProfileMenu from './components/LandingPage/ProfilePage';
+import ProfilePage from './components/LandingPage/ProfilePage';
 import ProfileUpdate from './components/LandingPage/ProfileUpdate';
 import VerificationPage from './components/LandingPage/VerificationPage';
 import { Provider } from 'react-redux';
@@ -16,6 +16,10 @@ import store from './Redux/store';
 import AfterForgot  from './components/LandingPage/AfterForgot';
 import ChangePassword from './components/LandingPage/ChangePassword';
 import ChangeUserName from './components/LandingPage/ChangeUserName';
+import ChangeEmail from './components/LandingPage/ChangeEmail';
+import ChangeEmailVerification from './components/LandingPage/ChangeEmailVerifikasi';
+import ChangePhoneNumber from './components/LandingPage/ChangePhoneNumber';
+
 
 // Menggabungkan semua reducer
 
@@ -32,7 +36,7 @@ const App = () => {
           <Route path="/" element={<Landing />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/aboutus" element={<AboutUs />} />
-          <Route path="/profilemenu" element={<ProfileMenu />} />
+          <Route path="/profilpage" element={<ProfilePage />} />
           <Route path="/profileupdate" element={<ProfileUpdate />} />
           <Route path="/verification/:token" element={<VerificationPage />} />
           <Route path='/signtest' element={<SignTest/>} />
@@ -41,6 +45,10 @@ const App = () => {
           <Route path='/afterforgot' element={<AfterForgot/>} />
           <Route path="/changepassword" element={<ChangePassword />} />
           <Route path="/changeusername" element={<ChangeUserName />} />
+          <Route path='/changeemail' element={<ChangeEmail />} />
+          <Route path='/verification-change-email/:token' element={<ChangeEmailVerification />} />
+          <Route path='/changephonenumber' element={<ChangePhoneNumber />} />
+          <Route path='/verification-change-email/:token' element={<ChangeEmailVerification />} />
         </Routes>
 
       </ChakraProvider>

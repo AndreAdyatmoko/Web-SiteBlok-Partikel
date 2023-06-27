@@ -28,7 +28,7 @@ const VerificationPage = () => {
 };
 
   return (
-    <Box p={4}>
+    <Box mt="150px" p={4}>
       <Flex align="center" mb={4}>
         <Heading size="md" fontWeight="bold">
           Verification Page

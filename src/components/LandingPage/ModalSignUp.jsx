@@ -14,7 +14,7 @@ import {
   InputGroup,
   InputRightElement,
   IconButton,
-  Toast
+  useToast,
 } from '@chakra-ui/react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
@@ -36,71 +36,8 @@ const validationSchema = Yup.object({
 });
 
 const ModalSignUp = ({ isOpen, onClose }) => {
-  const[token, setToken] = useState('')
-  const register = async (values) => {
-    try {
-      const res = await axios.post('https://minpro-blog.purwadhikabootcamp.com/api/auth/', {
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        confirmPassword: values.confirmPassword,
-        phone: values.phoneNumber,
-        FE_URL: "http://localhost:3000",
-      });
-
-      if (res.status === 200) {
-        console.log(res.data); // Tanggapan dari server
-        setToken(res.data.token);
-        Toast({
-          title: "Registration successful!",
-          status: "success",
-          duration: 2000,
-          isClosable: true,
-        });
-      } else {
-        // Tanggapan tidak sesuai yang diharapkan
-        Toast({
-          title: "Registration failed",
-          description: "Unable to register. Please try again later.",
-          status: "error",
-          duration: 2000,
-          isClosable: true,
-        });
-      }
-
-      const verify = await axios.patch('https://minpro-blog.purwadhikabootcamp.com/api/auth/verify/', {}, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      console.log(verify.data);
-    } catch (error) {
-      console.log(error);
-
-      // Tanggapan kesalahan dari server
-      if (error.response && error.response.data && error.response.data) {
-        const errorMessage = error.response.data;
-        Toast({
-          title: "Registration failed",
-          description: errorMessage,
-          status: "error",
-          duration: 2000,
-          isClosable: true,
-        });
-      } else {
-        Toast({
-          title: "Registration failed",
-          description: "Unable to register. Please try again later.",
-          status: "error",
-          duration: 2000,
-          isClosable: true,
-        });
-      }
-    }
-  };
-
   const [showPassword, setShowPassword] = useState(false);
+  const toast = useToast();
 
   const handleTogglePassword = () => {
     setShowPassword(!showPassword);
@@ -108,12 +45,56 @@ const ModalSignUp = ({ isOpen, onClose }) => {
 
   const handleSignup = async (values) => {
     try {
-      console.log("ini handles signup");
-      await register(values);
-      alert('Check Email for Verify!');
-      onClose();
+      const res = await axios.post('https://minpro-blog.purwadhikabootcamp.com/api/auth/', {
+        username: values.username,
+        email: values.email,
+        password: values.password,
+        confirmPassword: values.confirmPassword,
+        phone: values.phoneNumber,
+        FE_URL: 'http://localhost:3000',
+      });
+
+      if (res.status === 200) {
+        console.log(res.data); // Tanggapan dari server
+        toast({
+          title: 'Check your Email for Verification',
+          status: 'success',
+          duration: 2000,
+          isClosable: true,
+        });
+        onClose();
+      } else {
+        // Tanggapan tidak sesuai yang diharapkan
+        toast({
+          title: 'Registration failed',
+          description: 'Unable to register. Please try again later.',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
     } catch (error) {
       console.log(error);
+
+      // Tanggapan kesalahan dari server
+      if (error.response && error.response.data && error.response.data) {
+        const errorMessage = error.response.data;
+        toast({
+          title: 'Registration failed',
+          description: errorMessage,
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+      } else {
+        toast({
+          title: 'Registration failed',
+          description: 'Unable to register. Please try again later.',
+          status: 'error',
+          duration: 2000,
+          isClosable: true,
+        });
+      }
     }
   };
 
@@ -149,11 +130,11 @@ const ModalSignUp = ({ isOpen, onClose }) => {
               <FormControl mt={4}>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
-                  <Field 
-                    type={showPassword ? 'text' : 'password'} 
-                    name="password" 
-                    placeholder="Enter your password" 
-                    as={Input} 
+                  <Field
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    placeholder="Enter your password"
+                    as={Input}
                   />
                   <InputRightElement>
                     <IconButton
@@ -183,15 +164,15 @@ const ModalSignUp = ({ isOpen, onClose }) => {
               <FormControl mt={4}>
                 <FormLabel>Confirm Password</FormLabel>
                 <InputGroup>
-                  <Field 
-                    type={showPassword ? 'text' : 'password'} 
-                    name="confirmPassword" 
-                    as={Input} 
-                    placeholder="Confirm your password" 
+                  <Field
+                    type={showPassword ? 'text' : 'password'}
+                    name="confirmPassword"
+                    as={Input}
+                    placeholder="Confirm your password"
                   />
                   <InputRightElement>
                     <IconButton
-                      icon={showPassword ? <FaEyeSlash/> : <FaEye />}
+                      icon={showPassword ? <FaEyeSlash /> : <FaEye />}
                       variant="ghost"
                       onClick={handleTogglePassword}
                     />
