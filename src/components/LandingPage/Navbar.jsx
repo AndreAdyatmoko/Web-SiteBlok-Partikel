@@ -24,7 +24,7 @@ const Navbar = () => {
 
   const handleWriteClick = () => {
     if (isLogin) {
-      navigate('/write'); // Nagivasi ke halaman write blog
+      navigate('/writeblog'); // Nagivasi ke halaman write blog
     } else {
       setIsWriteModalOpen(true); // Buka modal Write
     }
@@ -88,7 +88,7 @@ const Navbar = () => {
           </Link>
 
           <Link href="#" display={{ base: "none", md: "inline-block" }} onClick={handleWriteClick}>
-            {isLogin ? "Write Blog" : "Write"}
+            {isLogin ? "Write Blog"/*POSISI User sudah Sign In */ : "Write"}
           </Link>
 
           {isLogin ? (
