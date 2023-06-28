@@ -51,7 +51,7 @@ const ProfilePage = () => {
       toast({
         title: 'Profile updated successfully! Please Refres the Browser',
         status: 'success',
-        duration: 9git000,
+        duration: 9000,
         isClosable: true,
       });
 
