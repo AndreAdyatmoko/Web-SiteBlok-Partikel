@@ -83,7 +83,7 @@ const Navbar = () => {
             About Us
           </Link>
 
-          <Link href="#" px={22} display={{ base: "none", md: "inline-block" }}>
+          <Link  onClick={() => navigate("/populerarticles")} href="#" px={22} display={{ base: "none", md: "inline-block" }}>
             Populer Articles
           </Link>
 

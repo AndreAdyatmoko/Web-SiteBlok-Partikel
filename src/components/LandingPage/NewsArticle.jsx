@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Box, Grid,  Heading, Text, Button, Avatar, Image } from "@chakra-ui/react";
+import { Box, SimpleGrid, Heading, Text, Button, Avatar, Image } from "@chakra-ui/react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 
 const NewsArticle = () => {
   const [articles, setArticles] = useState([]);
   const [activePage, setActivePage] = useState(1);
+  const articlesPerPage = 8;
+  const paginationSize = 10;
 
   const fetchData = async () => {
     try {
-      const url =
-        "https://minpro-blog.purwadhikabootcamp.com/api/blog?id_cat=3&sort=ASC&page=1";
-      const response = await axios.get(url);
-      console.log(response.data);
-      setArticles(response.data.result);
+      const categories = [1, 2, 3, 4, 5, 6, 7]; // Daftar ID kategori
+      const filter = categories.map(categoryId => {
+        const url = `https://minpro-blog.purwadhikabootcamp.com/api/blog?id_cat=${categoryId}&sort=ASC&page=1&limit=20`;
+        return axios.get(url);
+      });
+      const responses = await Promise.all(filter);
+      const allArticles = responses.flatMap(response => response.data.result);
+      console.log(allArticles);
+      setArticles(allArticles);
     } catch (error) {
       console.log(error);
     }
@@ -25,9 +31,8 @@ const NewsArticle = () => {
   }, []);
 
   const handleNextPage = () => {
-    const totalPages = Math.ceil(articles.length / 3);
-    if (activePage < totalPages && activePage < 3)
-    setActivePage((prevPage) => prevPage + 1);
+    const totalPages = Math.ceil(articles.length / articlesPerPage);
+    if (activePage < totalPages) setActivePage((prevPage) => prevPage + 1);
   };
 
   const handlePrevPage = () => {
@@ -36,73 +41,82 @@ const NewsArticle = () => {
     }
   };
 
-  const renderArticleIndex = (index) => {
+  const renderArticle = (article) => {
     return (
-      <Button
-        key={index}
-        onClick={() => setActivePage(index)}
-        colorScheme={activePage === index ? "blue" : "gray"}
-        mx={1}
-        size="sm"
-      >
-        {index}
-      </Button>
+      <SwiperSlide key={article.id}>
+        <Box
+          p={4}
+          boxShadow="md"
+          borderRadius="md"
+          bg="#C0DBE3"
+          border="1px solid gray"
+          height="100%"
+          display="flex"
+          flexDirection="column"
+        >
+          <Image
+            src={`https://minpro-blog.purwadhikabootcamp.com/${article.imageURL}`}
+            alt={article.id}
+            boxSize="150px"
+            flex="1"
+            objectFit="cover"
+          />
+          <Box mt={4}>
+            <Heading as="h3" fontSize="xl">  
+              {/* {article.title} // judulnya aku mattin karena jelek, Masih cari cara biar rapi */} 
+            </Heading>
+            <Text mt={2} fontSize="sm" color="gray.500">
+              Created At: {new Date(article.createdAt).toLocaleDateString()}
+            </Text>
+            <Text mt={2} fontSize="sm" color="gray.500">
+              Category: {article.Category.name}
+            </Text>
+            <Box mt={2} display="flex" alignItems="center">
+              <Avatar
+                name={article.User.username}
+                src={article.User.imgProfile}
+                size="sm"
+                borderRadius="full"
+              />
+              <Text ml={2} fontSize="sm">
+                {article.User.username.slice(0, 6)}
+              </Text>
+            </Box>
+            <Button colorScheme="blue" mt={4} size="sm">
+              Read More
+            </Button>
+          </Box>
+        </Box>
+      </SwiperSlide>
     );
   };
 
   const renderArticleIndexes = () => {
-    const totalPages = Math.ceil(articles.length / 3);
-    const indexes = [];
-    for (let i = 1; i <= totalPages; i++) {
-      indexes.push(renderArticleIndex(i));
-    }
-    return indexes;
+    const totalPages = Math.ceil(articles.length / articlesPerPage);
+    const startIndex = Math.max(activePage - Math.floor(paginationSize / 2), 1);
+    const endIndex = Math.min(startIndex + paginationSize - 1, totalPages);
+
+    return Array.from({ length: endIndex - startIndex + 1 }, (_, index) => startIndex + index).map((i) => (
+      <Button
+        key={i}
+        onClick={() => setActivePage(i)}
+        colorScheme={activePage === i ? "blue" : "gray"}
+        mx={1}
+        size="sm"
+      >
+        {i}
+      </Button>
+    ));
   };
 
   return (
     <Box mt={8}>
-      <Swiper spaceBetween={30} slidesPerView={3}>
-        <Grid templateColumns="repeat(3, 1fr)" gap={4}>
-          {articles.slice((activePage - 1) * 3, activePage * 3).map((article) => (
-            <SwiperSlide key={article.id}>
-              <Box
-                p={4}
-                boxShadow="md"
-                borderRadius="md"
-                bg="white"
-                border="1px solid gray"
-                height="100%"
-              >
-                <Image
-                  src={`https://minpro-blog.purwadhikabootcamp.com/${article.imageURL}`}
-                  alt={article.id}
-                  style={{ width: "100%", height: "200px", objectFit: "cover" }}
-                />
-                <Box>
-                  <Heading as="h3" fontSize="xl" my={2}>
-                    {article.title}
-                  </Heading>
-                  <Text mt={2}>
-                    Created At: {new Date(article.createdAt).toLocaleDateString()}
-                  </Text>
-                  <Text>Category: {article.Category.name}</Text>
-                  <Grid templateColumns="auto 1fr" mt={2} alignItems="center">
-                    <Avatar
-                      name={article.User.username}
-                      src={article.User.imgProfile}
-                      size="sm"
-                      borderRadius="full"
-                    />
-                    <Text ml={2}>{article.User.username}</Text>
-                  </Grid>
-                  <Button colorScheme="blue" mt={2}>
-                    Read More
-                  </Button>
-                </Box>
-              </Box>
-            </SwiperSlide>
-          ))}
-        </Grid>
+      <Swiper spaceBetween={30} slidesPerView={8}>
+        <SimpleGrid spacing={4}>
+          {articles
+            .slice((activePage - 1) * articlesPerPage, activePage * articlesPerPage)
+            .map((article) => renderArticle(article))}
+        </SimpleGrid>
       </Swiper>
       <Box display="flex" justifyContent="center" mt={4}>
         <Button colorScheme="blue" onClick={handlePrevPage} disabled={activePage === 1}>
@@ -112,7 +126,7 @@ const NewsArticle = () => {
         <Button
           colorScheme="blue"
           onClick={handleNextPage}
-          disabled={activePage === Math.ceil(articles.length / 3)}
+          disabled={activePage === Math.ceil(articles.length / articlesPerPage)}
         >
           Next
         </Button>

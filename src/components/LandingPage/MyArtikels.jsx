@@ -13,7 +13,7 @@ const MyArtikels = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        'https://minpro-blog.purwadhikabootcamp.com/api/blog',
+        'https://minpro-blog.purwadhikabootcamp.com/api/blog', /* sudah konfirmasi ke Lecture untuk APInya memang ada kendala */
         {
           headers: {
             Authorization: `Bearer ${token}`,

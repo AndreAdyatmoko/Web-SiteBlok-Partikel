@@ -21,6 +21,7 @@ import ChangeEmailVerification from './components/LandingPage/ChangeEmailVerifik
 import ChangePhoneNumber from './components/LandingPage/ChangePhoneNumber';
 import WriteBlog from './components/LandingPage/WriteBlog';
 import MyArtikel from './components/LandingPage/MyArtikels';
+import PopularArticles from './components/LandingPage/PopulerArticles';
 
 
 // Menggabungkan semua reducer
@@ -53,6 +54,7 @@ const App = () => {
           <Route path='/verification-change-email/:token' element={<ChangeEmailVerification />} />
           <Route path='/writeblog' element={<WriteBlog />} />
           <Route path='/myartikel' element={<MyArtikel />} />
+          <Route path='/populerarticles' element= {<PopularArticles />} />
         </Routes>
 
       </ChakraProvider>
