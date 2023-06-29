@@ -91,7 +91,7 @@ const Footer = () => {
         </Flex>
         <Flex alignItems="center">
           <Text color="gray.500" fontSize="0.875rem" pl="0.5rem">
-            &copy; 2019 company, Inc. All rights reserved.
+            &copy; Andre Adyatmoko.
           </Text>
         </Flex>
       </VStack>
