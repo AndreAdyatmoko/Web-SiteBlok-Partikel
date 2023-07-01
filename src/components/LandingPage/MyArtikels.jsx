@@ -5,26 +5,28 @@ import axios from 'axios';
 const MyArtikels = () => {
   const [articles, setArticles] = useState([]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
   const fetchData = async () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        'https://minpro-blog.purwadhikabootcamp.com/api/blog', /* sudah konfirmasi ke Lecture untuk APInya memang ada kendala */
+        `https://minpro-blog.purwadhikabootcamp.com/api/blog?userId=${localStorage.getItem('id')}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+      console.log(response)
+
       setArticles(response.data.result);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
   };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <Box mt={90} align="center">
