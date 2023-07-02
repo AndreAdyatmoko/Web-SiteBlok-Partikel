@@ -9,7 +9,7 @@ const MyArtikels = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `https://minpro-blog.purwadhikabootcamp.com/api/blog?userId=${localStorage.getItem('id')}`,
+        `https://minpro-blog.purwadhikabootcamp.com/api/blog?userId=${localStorage.getItem('token')}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -57,6 +57,10 @@ const MyArtikels = () => {
                   <Text fontWeight="bold">Category:</Text>
                   <Text>{article.Category.name}</Text>
                 </HStack>
+
+                <Text>{article.createdAt}</Text>
+
+                
               </Box>
             </WrapItem>
           ))}

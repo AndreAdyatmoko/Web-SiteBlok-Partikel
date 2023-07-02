@@ -1,66 +1,73 @@
-import React, { useState, useEffect } from 'react';
-import { Box, Heading, Text, SimpleGrid } from '@chakra-ui/react';
+import React, { useEffect, useState } from 'react';
+import { Box, Heading, Text, Image, HStack, Wrap, WrapItem } from '@chakra-ui/react';
 import axios from 'axios';
 
 const PopularArticles = () => {
-  const [articles, setArticles] = useState([]);
-
-  const fetchData = async () => {
-    try {
-      const response = await axios.get('https://minpro-blog.purwadhikabootcamp.com/api/blog?id_cat=3&sort=DESC&page=1&limit=10');
-      setArticles(response.data.result);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const [popularArticles, setPopularArticles] = useState([]);
 
   useEffect(() => {
     fetchData();
   }, []);
 
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(
+        `https://minpro-blog.purwadhikabootcamp.com/api/blog/pagFav?page=2&orderBy=total_fav&sort=DESC`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      console.log(response);
+
+      // Sort articles by popularity and slice the top 10 articles
+      const sortedArticles = response.data.result
+        .sort((a, b) => b.views - a.views)
+        .slice(0, 10);
+
+      setPopularArticles(sortedArticles);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   return (
-    <Box mt={8}>
-      <Heading mb={4}>Popular Articles</Heading>
-      <SimpleGrid columns={[1, 2]} spacing={4}>
-        {articles.map((article) => (
-          <Box key={article.id} p={4} borderWidth="1px" borderRadius="md">
+    <Box mt={90} align="center">
+      <Heading mb={5}>Most Popular Articles</Heading>
+      <Wrap spacing={5} justify="center">
+        {popularArticles.map((article) => (
+          <WrapItem key={article.id}>
             <Box
-              style={{
-                position: 'relative',
-                paddingTop: '56.25%',
-                height: 0,
-                overflow: 'hidden',
-                borderRadius: '20px',
-              }}
+              p={5}
+              borderWidth="1px"
+              borderRadius="md"
+              width="500px"
+              boxShadow="md"
             >
-              <img
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                }}
+              <Heading size="md">{article.title.slice(0,6)}...</Heading>
+              <Image
                 src={`https://minpro-blog.purwadhikabootcamp.com/${article.imageURL}`}
                 alt={article.title}
+                mt={4}
+                mb={4}
+                objectFit="cover"
+                height="200px"
+                width="100%"
               />
+              <Text>{article.content.slice(0, 7)}...</Text>
+              <HStack spacing={2} mt={4}>
+                <Text fontWeight="bold">Category:</Text>
+                <Text>{article.Category.name}</Text>
+              </HStack>
+                <Text>By {article.User.username} on{" "}</Text>
+                <Text>{article.createdAt}</Text>
+
             </Box>
-            <Box
-              color="white"
-              padding="10px 10px 20px"
-              bg="rgba(0, 0, 0, 0.5)"
-              borderRadius="0 0 20px 20px"
-              mt={2}
-            >
-              <Heading as="h3" size="md" mb={2}>
-                {article.title}
-              </Heading>
-              <Text>{article.content}</Text>
-            </Box>
-          </Box>
+          </WrapItem>
         ))}
-      </SimpleGrid>
+      </Wrap>
     </Box>
   );
 };
