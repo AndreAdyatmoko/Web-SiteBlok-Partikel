@@ -2,7 +2,7 @@ import React from 'react'
 import NavBar from '../components/LandingPage/Navbar'
 import Footer from '../components/LandingPage/Footers'
 import Content from '../components/LandingPage/Content'
-import NewsArticle from '../components/LandingPage/NewsArticle'
+import ShowArticles from '../components/LandingPage/ShowArticles'
 
 
 
@@ -15,7 +15,7 @@ const Landing = () => {
     <>
       <NavBar />
       <Content />
-      <NewsArticle />
+      <ShowArticles />
       <Footer/>
     </>
   )

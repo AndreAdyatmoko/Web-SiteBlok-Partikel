@@ -13,7 +13,7 @@ const PopularArticles = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `https://minpro-blog.purwadhikabootcamp.com/api/blog/pagFav?page=2&orderBy=total_fav&sort=DESC`,
+        `https://minpro-blog.purwadhikabootcamp.com/api/blog/pagFav?page=1&orderBy=total_fav&sort=ASC`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

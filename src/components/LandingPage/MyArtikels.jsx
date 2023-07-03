@@ -9,7 +9,7 @@ const MyArtikels = () => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `https://minpro-blog.purwadhikabootcamp.com/api/blog?userId=${localStorage.getItem('token')}`,
+        `https://minpro-blog.purwadhikabootcamp.com/api/blog/auth?&sort=ASC&page=1&search&sortBy&size`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ const MyArtikels = () => {
                 width="500px"
                 boxShadow="md"
               >
-                <Heading size="md">{article.title}</Heading>
+                <Heading size="md" noOfLines={1}>{article.title}</Heading>
                 <Image
                   src={`https://minpro-blog.purwadhikabootcamp.com/${article.imageURL}`}
                   alt={article.title}
@@ -52,7 +52,7 @@ const MyArtikels = () => {
                   height="200px"
                   width="100%"
                 />
-                <Text>{article.content}</Text>
+                <Text noOfLines={1}>{article.content}</Text>
                 <HStack spacing={2} mt={4}>
                   <Text fontWeight="bold">Category:</Text>
                   <Text>{article.Category.name}</Text>
