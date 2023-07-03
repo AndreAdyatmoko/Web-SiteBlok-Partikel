@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Box, SimpleGrid, Heading, Text, Button, Avatar, Image, Flex } from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import LikeButton from "./LikeButton";
 
-const ShowArticles = () => {
+const ShowArticles = ({ token }) => {
+  const navigate = useNavigate();
   const [articles, setArticles] = useState([]);
   const [activePage, setActivePage] = useState(1);
   const articlesPerPage = 8;
@@ -11,12 +14,12 @@ const ShowArticles = () => {
   const fetchData = async () => {
     try {
       const categories = [1, 2, 3, 4, 5, 6, 7]; // Daftar ID kategori
-      const filter = categories.map(categoryId => {
+      const filter = categories.map((categoryId) => {
         const url = `https://minpro-blog.purwadhikabootcamp.com/api/blog?id_cat=${categoryId}&sort=ASC&page=1&limit=20`;
         return axios.get(url);
       });
       const responses = await Promise.all(filter);
-      const allArticles = responses.flatMap(response => response.data.result);
+      const allArticles = responses.flatMap((response) => response.data.result);
       console.log(allArticles);
       setArticles(allArticles);
     } catch (error) {
@@ -30,12 +33,12 @@ const ShowArticles = () => {
 
   const handleNextPage = () => {
     const totalPages = Math.ceil(articles.length / articlesPerPage);
-    if (activePage < totalPages) setActivePage(prevPage => prevPage + 1);
+    if (activePage < totalPages) setActivePage((prevPage) => prevPage + 1);
   };
 
   const handlePrevPage = () => {
     if (activePage > 1) {
-      setActivePage(prevPage => prevPage - 1);
+      setActivePage((prevPage) => prevPage - 1);
     }
   };
 
@@ -60,16 +63,18 @@ const ShowArticles = () => {
           boxSize="150px"
           flex="1"
           objectFit="cover"
-          width={"100%"}
         />
         <Box mt={4}>
           <Heading as="h3" fontSize="xl" noOfLines={1}>
-             {article.title}
+            {article.title}
           </Heading>
-          <Text noOfLines={1}>{article.content}</Text>
-          <Text mt={2} fontSize="sm" color="gray.500">
-            Created At: {new Date(article.createdAt).toLocaleDateString()}
-          </Text>
+          <Text noOfLines={2}>{article.content}</Text>
+          <Flex justifyContent="space-between" alignItems="center">
+            <Text mt={2} fontSize="sm" color="gray.500">
+              Created At: {new Date(article.createdAt).toLocaleDateString()}
+            </Text>
+            <LikeButton articleId={article.id} token={token} />
+          </Flex>
           <Text mt={2} fontSize="sm" color="gray.500">
             Category: {article.Category.name}
           </Text>
@@ -84,7 +89,12 @@ const ShowArticles = () => {
               {article.User.username}
             </Text>
           </Flex>
-          <Button colorScheme="blue" mt={4} size="sm">
+          <Button
+            colorScheme="blue"
+            mt={4}
+            size="sm"
+            onClick={() => navigate(`${article.id}`)}
+          >
             Read More
           </Button>
         </Box>
@@ -97,7 +107,7 @@ const ShowArticles = () => {
     const startIndex = Math.max(activePage - Math.floor(paginationSize / 2), 1);
     const endIndex = Math.min(startIndex + paginationSize - 1, totalPages);
 
-    return Array.from({ length: endIndex - startIndex + 1 }, (_, index) => startIndex + index).map(i => (
+    return Array.from({ length: endIndex - startIndex + 1 }, (_, index) => startIndex + index).map((i) => (
       <Button
         key={i}
         onClick={() => setActivePage(i)}

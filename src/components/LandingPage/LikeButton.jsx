@@ -12,11 +12,14 @@ const LikeButton = ({ articleId, token }) => {
 
   const getLikeStatus = async () => {
     try {
-      const response = await axios.get(`https://minpro-blog.purwadhikabootcamp.com/api/blog/like/${articleId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await axios.get(
+        `https://minpro-blog.purwadhikabootcamp.com/api/blog/like/${articleId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       const { liked, count } = response.data;
       setLiked(liked);
       setLikeCount(count);
@@ -46,7 +49,7 @@ const LikeButton = ({ articleId, token }) => {
 
   return (
     <Button colorScheme={liked ? "blue" : "gray"} mt={4} size="sm" onClick={handleLike}>
-      {liked ? "Disukai" : "Suka"} ({likeCount})
+      {liked ? "Unlike" : "Like"} ({likeCount})
     </Button>
   );
 };

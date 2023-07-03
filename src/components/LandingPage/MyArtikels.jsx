@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Heading, Text, Image, HStack, Wrap, WrapItem } from '@chakra-ui/react';
+import DeletePage from './DeletePage';
 import axios from 'axios';
 
 const MyArtikels = () => {
@@ -16,7 +17,7 @@ const MyArtikels = () => {
           },
         }
       );
-      console.log(response)
+      console.log(response);
 
       setArticles(response.data.result);
     } catch (error) {
@@ -27,6 +28,16 @@ const MyArtikels = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const handleDeleteArticle = async (articleId) => {
+    try {
+      await axios.patch(`https://minpro-blog.purwadhikabootcamp.com/api/blog/remove/${articleId}`);
+      const updatedArticles = articles.filter((article) => article.id !== articleId);
+      setArticles(updatedArticles);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <Box mt={90} align="center">
@@ -59,8 +70,7 @@ const MyArtikels = () => {
                 </HStack>
 
                 <Text>{article.createdAt}</Text>
-
-                
+                <DeletePage id={article.id} onDelete={handleDeleteArticle} />
               </Box>
             </WrapItem>
           ))}
