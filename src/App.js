@@ -23,7 +23,7 @@ import WriteBlog from './components/LandingPage/WriteBlog';
 import MyArtikel from './components/LandingPage/MyArtikels';
 import PopularArticles from './components/LandingPage/PopulerArticles';
 import MyFavorite from './components/LandingPage/MyFavorite';
-import NotSignInLike from './components/LandingPage/NotSignInLike';
+
 
 
 const App = () => {
@@ -52,7 +52,7 @@ const App = () => {
           <Route path='/myartikel' element={<MyArtikel />} />
           <Route path='/populerarticles' element= {<PopularArticles />} />
           <Route path='/myfavorite' element={<MyFavorite />} />
-          <Route path='/notsigninlike'element={<NotSignInLike/>} />
+    
         
         </Routes>
 

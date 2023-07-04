@@ -2,13 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Button, Box } from "@chakra-ui/react";
 import { FaHeart } from "react-icons/fa";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 
 const LikeButton = ({ articleId }) => {
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const navigate = useNavigate();
-  
 
   useEffect(() => {
     getLikeStatus();
@@ -37,11 +34,11 @@ const LikeButton = ({ articleId }) => {
     try {
       const token = localStorage.getItem("token");
       if (!token) {
-        navigate("/notsigninlike");
+        alert("You must sign in first to like an article.");
         return;
       }
 
-      setIsLiked((prevIsLiked) => !prevIsLiked);
+      setIsLiked(true);
       const response = await axios.post(
         `https://minpro-blog.purwadhikabootcamp.com/api/blog/like`,
         {
@@ -53,7 +50,34 @@ const LikeButton = ({ articleId }) => {
           },
         }
       );
-      const { liked, count } = response.data;
+      const { count } = response.data;
+      setLikeCount(count);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUnlike = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("You must sign in first to unlike an article.");
+        return;
+      }
+
+      setIsLiked(false);
+      const response = await axios.delete(
+        `https://minpro-blog.purwadhikabootcamp.com/api/blog/unlike/2`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          data: {
+            BlogId: articleId,
+          },
+        }
+      );
+      const { count } = response.data;
       setLikeCount(count);
     } catch (error) {
       console.log(error);
@@ -69,7 +93,7 @@ const LikeButton = ({ articleId }) => {
         height={30}
         borderRadius="full"
         size="xl"
-        onClick={handleLike}
+        onClick={isLiked ? handleUnlike : handleLike}
       >
         <FaHeart />
       </Button>
