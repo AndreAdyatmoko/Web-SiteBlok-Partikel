@@ -22,14 +22,9 @@ import ChangePhoneNumber from './components/LandingPage/ChangePhoneNumber';
 import WriteBlog from './components/LandingPage/WriteBlog';
 import MyArtikel from './components/LandingPage/MyArtikels';
 import PopularArticles from './components/LandingPage/PopulerArticles';
+import MyFavorite from './components/LandingPage/MyFavorite';
+import NotSignInLike from './components/LandingPage/NotSignInLike';
 
-
-
-// Menggabungkan semua reducer
-
-  // Tambahkan reducer lain di sini jika ada
-
-// Membuat store Redux
 
 const App = () => {
   return (
@@ -56,6 +51,9 @@ const App = () => {
           <Route path='/writeblog' element={<WriteBlog />} />
           <Route path='/myartikel' element={<MyArtikel />} />
           <Route path='/populerarticles' element= {<PopularArticles />} />
+          <Route path='/myfavorite' element={<MyFavorite />} />
+          <Route path='/notsigninlike'element={<NotSignInLike/>} />
+        
         </Routes>
 
       </ChakraProvider>

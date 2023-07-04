@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Flex, Avatar, Text, Button, Heading, Grid, Input } from '@chakra-ui/react';
+import { Box, Flex,  Text, Button } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 

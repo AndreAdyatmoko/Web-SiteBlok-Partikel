@@ -15,7 +15,7 @@ const ShowArticles = ({ token }) => {
     try {
       const categories = [1, 2, 3, 4, 5, 6, 7]; // Daftar ID kategori
       const filter = categories.map((categoryId) => {
-        const url = `https://minpro-blog.purwadhikabootcamp.com/api/blog?id_cat=${categoryId}&sort=ASC&page=1&limit=20`;
+        const url = `https://minpro-blog.purwadhikabootcamp.com/api/blog?id_cat=${categoryId}&sort=ASC&page=1&limit=2000`;
         return axios.get(url);
       });
       const responses = await Promise.all(filter);

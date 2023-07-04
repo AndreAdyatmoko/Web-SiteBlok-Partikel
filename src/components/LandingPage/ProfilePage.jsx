@@ -177,7 +177,11 @@ const ProfilePage = () => {
         </Box>
 
         <Box bg="white" boxShadow="md" p={4} borderRadius="md">
-          <Button colorScheme="teal" size="md" width="100%">
+          <Button 
+            colorScheme="teal" 
+            size="md" 
+            width="100%"
+            onClick ={() => navigate('/myfavorite')}>
             Favorite Article
           </Button>
         </Box>
